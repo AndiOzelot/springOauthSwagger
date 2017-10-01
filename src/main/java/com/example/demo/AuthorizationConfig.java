@@ -22,8 +22,8 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableAuthorizationServer
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
-	private int accessTokenValiditySeconds = 10000;
-    private int refreshTokenValiditySeconds = 30000;
+	private int accessTokenValiditySeconds = 60;
+    private int refreshTokenValiditySeconds = 120;
     
     @Value("${security.oauth2.resource.id}")
     private String resourceId;
@@ -56,8 +56,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
             .authorities("ROLE_TRUSTED_CLIENT")
             .scopes("read", "write")
             .resourceIds(this.resourceId)
-            .accessTokenValiditySeconds(this.accessTokenValiditySeconds)
-            .refreshTokenValiditySeconds(this.refreshTokenValiditySeconds)
+//            .accessTokenValiditySeconds(this.accessTokenValiditySeconds)
+//            .refreshTokenValiditySeconds(this.refreshTokenValiditySeconds)
             .secret("secret");
     }
     
@@ -85,6 +85,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	    defaultTokenServices.setTokenStore(tokenStore());
 	    defaultTokenServices.setSupportRefreshToken(true);
 	    defaultTokenServices.setTokenEnhancer(accessTokenConverter());
+	    defaultTokenServices.setAccessTokenValiditySeconds(this.accessTokenValiditySeconds);
+	    defaultTokenServices.setRefreshTokenValiditySeconds(this.refreshTokenValiditySeconds);
 	    return defaultTokenServices;
 	}
 }
